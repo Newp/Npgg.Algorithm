@@ -5,20 +5,44 @@ using Xunit;
 
 namespace Npgg.Algorithm.Tests
 {
-    public class PermutationTests
+
+
+    public abstract class PermutationFixture
     {
         [Theory]
         [InlineData(5)]
         [InlineData(6)]
         [InlineData(7)]
-        [InlineData(8)]
         //[InlineData(50)]
+        public void AllCountTest<T>(int count)
+        {
+            var array = Enumerable.Range(1, count).ToArray();
+
+            var list = new List<string>();
+
+            int expectCount = Enumerable.Range(1, count).Aggregate(1, (p, item) => p * item);
+
+            var allcount = Permutation(array).Count();
+
+            Assert.Equal(expectCount, allcount);
+
+        }
+
+
+        [Theory]
+        [InlineData(5)]
+        [InlineData(6)]
+        [InlineData(7)]
         public void DuplicationTest<T>(int count)
         {
             var array = Enumerable.Range(1, count).ToArray();
 
             var list = new List<string>();
-            foreach (var shuffledArray in Permutation(array, 0))
+
+            var result = Permutation(array);
+
+
+            foreach (var shuffledArray in result)
             {
                 var line = string.Join(',', shuffledArray);
 
@@ -30,13 +54,12 @@ namespace Npgg.Algorithm.Tests
 
         [Theory]
         [InlineData(5)]
-        [InlineData(20)]
-        //[InlineData(50)]
+        [InlineData(7)]
         public void AllElementExistsTest(int count)
         {
             var array = Enumerable.Range(1, count).ToArray();
 
-            foreach (var shuffledArray in Permutation(array, 0))
+            foreach (var shuffledArray in Permutation(array))
             {
                 foreach(int value in array)
                 {
@@ -45,27 +68,9 @@ namespace Npgg.Algorithm.Tests
             }
         }
 
-        public static IEnumerable<T[]> Permutation<T>(T[] arr, int currentDepth)
-        {
-            var length = arr.Length;
-            if (currentDepth == length)
-            {
-                yield return arr;
-                yield break;
-            }
+        public abstract IEnumerable<T[]> Permutation<T>(T[] arr);
 
-            for (int i = currentDepth; i < length; i++)
-            {
-                Swap(arr, i, currentDepth, true);
-                foreach (var result in Permutation(arr, currentDepth + 1))
-                {
-                    yield return result;
-                }
-                Swap(arr, i, currentDepth, false);
-            }
-        }
-
-        static void Swap<T>(T[] arr, int left, int right, bool print)
+        public void Swap<T>(T[] arr, int left, int right)
         {
             if (left == right)
                 return;
@@ -73,6 +78,15 @@ namespace Npgg.Algorithm.Tests
             T temp = arr[left];
             arr[left] = arr[right];
             arr[right] = temp;
+        }
+
+        public T[] ArrayClone<T>(T[] source)
+        {
+            var result = new T[source.Length];
+            source.CopyTo(result, 0);
+            
+            //Buffer.BlockCopy(source, 0, result, 0, source.Length);
+            return result;
         }
 
     }
