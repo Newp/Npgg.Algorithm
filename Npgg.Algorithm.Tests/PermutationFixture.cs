@@ -6,28 +6,8 @@ using Xunit;
 namespace Npgg.Algorithm.Tests
 {
 
-
     public abstract class PermutationFixture
     {
-        [Theory]
-        [InlineData(5)]
-        [InlineData(6)]
-        [InlineData(7)]
-        //[InlineData(50)]
-        public void AllCountTest<T>(int count)
-        {
-            var array = Enumerable.Range(1, count).ToArray();
-
-            var list = new List<string>();
-
-            int expectCount = Enumerable.Range(1, count).Aggregate(1, (p, item) => p * item);
-
-            var allcount = Permutation(array).Count();
-
-            Assert.Equal(expectCount, allcount);
-
-        }
-
 
         [Theory]
         [InlineData(5)]
@@ -39,8 +19,7 @@ namespace Npgg.Algorithm.Tests
 
             var list = new List<string>();
 
-            var result = Permutation(array);
-
+            var result = Permutation(array).ToArray();
 
             foreach (var shuffledArray in result)
             {
@@ -55,11 +34,16 @@ namespace Npgg.Algorithm.Tests
         [Theory]
         [InlineData(5)]
         [InlineData(7)]
+        [InlineData(8)]
         public void AllElementExistsTest(int count)
         {
+            int expectCount = Enumerable.Range(1, count).Aggregate(1, (p, item) => p * item);
             var array = Enumerable.Range(1, count).ToArray();
 
-            foreach (var shuffledArray in Permutation(array))
+            var list = Permutation(array).ToArray();
+
+            Assert.Equal(expectCount, list.Length);
+            foreach (var shuffledArray in list)
             {
                 foreach(int value in array)
                 {
