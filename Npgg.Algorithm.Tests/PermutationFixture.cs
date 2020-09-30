@@ -35,6 +35,7 @@ namespace Npgg.Algorithm.Tests
         [InlineData(5)]
         [InlineData(7)]
         [InlineData(8)]
+        [InlineData(10)]
         public void AllElementExistsTest(int count)
         {
             int expectCount = Enumerable.Range(1, count).Aggregate(1, (p, item) => p * item);
@@ -69,7 +70,6 @@ namespace Npgg.Algorithm.Tests
             var result = new T[source.Length];
             source.CopyTo(result, 0);
             
-            //Buffer.BlockCopy(source, 0, result, 0, source.Length);
             return result;
         }
 
